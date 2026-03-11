@@ -1,0 +1,129 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0f0f13;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling when swiping */
+    user-select: none;
+}
+.header {
+    text-align: center;
+    margin-top: 20px;
+    z-index: 10;
+}
+h1 { margin-bottom: 5px; font-size: 2rem; }
+p { color: #888; margin-top: 0; font-size: 0.9rem; }
+#status { font-size: 1.5rem; font-weight: bold; color: #4CAF50; margin-bottom: 10px; }
+/* 3D Scene Setup */
+.scene {
+    width: 100vw;
+    height: 60vh;
+    perspective: 1200px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    touch-action: none; /* Crucial for mobile swiping */
+}
+
+.scene:active { cursor: grabbing; }
+.cube {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    transform-style: preserve-3d;
+    transform: rotateX(-25deg) rotateY(45deg); 
+    transition: transform 0.1s ease-out; /* Smooth transition for drag */
+}
+/* The 3 Layers Stacked in Z-Space */
+.layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    pointer-events: none; 
+}
+.layer[data-layer="0"] { transform: translateZ(160px); }
+.layer[data-layer="1"] { transform: translateZ(0px); }
+.layer[data-layer="2"] { transform: translateZ(-160px); }
+.macro-cell {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background-color: rgba(40, 40, 45, 0.85); 
+    padding: 5px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    pointer-events: auto; 
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    position: relative;
+}
+.layer[data-layer="1"] .macro-cell:nth-child(5) {
+    border: 1px solid #666;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1) inset;
+}
+.micro-cell {
+    width: 26px;
+    height: 26px;
+    background-color: #1a1a1e;
+    border: none;
+    border-radius: 2px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+.micro-cell:hover { background-color: #444; }
+.micro-cell.x { color: #ff5252; }
+.micro-cell.o { color: #448aff; }
+.macro-cell.claimed {
+    overflow: hidden;
+    pointer-events: none;
+    border-color: #555;
+}
+.macro-cell.claimed::after {
+    content: attr(data-winner);
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: bold;
+    background-color: rgba(20, 20, 25, 0.9);
+    z-index: 10;
+}
+.macro-cell.claimed[data-winner="X"]::after { color: #ff5252; text-shadow: 0 0 15px #ff5252; }
+.macro-cell.claimed[data-winner="O"]::after { color: #448aff; text-shadow: 0 0 15px #448aff; }
+.controls {
+    margin-top: 20px;
+    z-index: 10;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+button.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+button.btn:hover { background-color: #555; }
+button#autoRotate { background-color: #448aff; border-color: #448aff; }
+button#reset { background-color: #4CAF50; border-color: #4CAF50; }
+button#reset:hover { background-color: #45a049; }
